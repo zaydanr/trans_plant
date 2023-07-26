@@ -15,7 +15,6 @@ class _CameraState extends State<Camera> {
   @override
 
   void initState() {
-    // TODO: implement initState
     final videoID = YoutubePlayer.convertUrlToId(videoURL);
 
     _controller = YoutubePlayerController(

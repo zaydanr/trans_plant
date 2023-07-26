@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'camera.dart';
+import 'dashboard.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,9 +15,7 @@ class _HomePageState extends State<HomePage>{
 
   int _SelectedIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      "Dashboard",
-    ),
+    Weather(),
     Text(
       "Plant Info"
     ),
@@ -39,8 +38,8 @@ class _HomePageState extends State<HomePage>{
             color: Colors.white,
             activeColor: Colors.white,
             tabBackgroundColor: Colors.grey.shade800,
-            padding: EdgeInsets.all(16),
-            tabs: [
+            padding: const EdgeInsets.all(16),
+            tabs: const [
               GButton(
                 icon: Icons.dashboard,
                 text: 'Dashboard',
