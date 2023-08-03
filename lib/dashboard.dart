@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 class Weather extends StatelessWidget {
   const Weather ({Key? key}) : super(key : key);
 
@@ -7,6 +8,8 @@ class Weather extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(title: const Text("Dashboard"), backgroundColor: Colors.transparent),
+
       // ignore: avoid_unnecessary_containers
       body: Padding(
         padding: const EdgeInsets.only(top: 20.0),
