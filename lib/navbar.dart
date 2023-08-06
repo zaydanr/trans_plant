@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'camera.dart';
+import 'package:trans_plant/sensors.dart';
 import 'dashboard.dart';
+import 'camera.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,14 +15,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>{
 
   int _SelectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
+  static  List<Widget> _widgetOptions = <Widget>[
     Weather(),
     Text(
       "Plant Info"
     ),
-    Text(
-      "Sensors"
-    ),
+    SensorsPage(),
     Camera(),
   ];
   @override
