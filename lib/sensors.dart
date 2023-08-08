@@ -1,245 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'mqtt_service.dart'; // Import the MQTT service file
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
-class SensorsPage extends StatefulWidget {
-  @override
-  _SensorsPageState createState() => _SensorsPageState();
-}
-
-class _SensorsPageState extends State<SensorsPage> {
-  final MqttService mqttService = MqttService();
-
-  @override
-  void initState() {
-    super.initState();
-    mqttService.connect('64c14253811ec75105c1948a', 'QuRHxlbi8RDbkv7Nkq77N3Ps');
-  }
-
-  // Helper method to convert pump/light status to On/Off
-  String _getOnOffStatus(int status) {
-    return status == 1 ? 'On' : 'Off';
-  }
-
+class SensorsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(title: Text('Sensors'), backgroundColor: Colors.transparent),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 20.0),
-        child: SingleChildScrollView(
-          child: Container(
-            child: Column(
-              children: [
-                Container(
-                  width: size.width,
-                  margin: EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
-                    gradient: LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 139, 236, 83),
-                        Color.fromARGB(193, 3, 145, 3),
-                      ],
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      stops: [0.2, 1.2],
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Sensors Data',
-                          style: GoogleFonts.cabin(
-                            textStyle: TextStyle(
-                              color: Colors.white,
-                              fontSize: 40),
-                          ),
-                        ),
-
-                        SizedBox(height: 20), // Add space between each row
-
-                        // Temperature
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20.0, right: 10),
-                              child: Icon(Icons.thermostat, color: Colors.white),
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Temperature: ${mqttService.temperature}°C',
-                                style: GoogleFonts.cabin(
-                                  textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 20), // Add space between each row
-
-                        // Humidity
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20.0, right: 10),
-                              child: Icon(Icons.opacity, color: Colors.white),
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Humidity: ${mqttService.humidity}%',
-                                style: GoogleFonts.cabin(
-                                  textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 20), // Add space between each row
-
-                        // Pressure
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20.0, right: 10),
-                              child: Icon(Icons.speed, color: Colors.white),
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Pressure: ${mqttService.pressure} hPa',
-                                style: GoogleFonts.cabin(
-                                  textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 20), // Add space between each row
-
-                        // Light Relay Status
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20.0, right: 10),
-                              child: Icon(Icons.lightbulb, color: Colors.white),
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Light Relay Status: ${_getOnOffStatus(mqttService.lightRelayStatus)}',
-                                style: GoogleFonts.cabin(
-                                  textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 20), // Add space between each row
-
-                        // Pump Relay Status
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20.0, right: 10),
-                              child: Icon(Icons.settings, color: Colors.white),
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Pump Relay Status: ${_getOnOffStatus(mqttService.pumpRelayStatus)}',
-                                style: GoogleFonts.cabin(
-                                  textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 20), // Add space between each row
-
-                        // Moisture
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20.0, right: 10),
-                              child: Icon(Icons.water, color: Colors.white),
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Moisture: ${mqttService.moisture}%',
-                                style: GoogleFonts.cabin(
-                                  textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 20), // Add space between each row
-
-                        // Light (Lux)
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20.0, right: 10),
-                              child: Icon(Icons.lightbulb_outline, color: Colors.white),
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Light: ${mqttService.light} Lux',
-                                style: GoogleFonts.cabin(
-                                  textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 20), // Add space between each row
-
-                        // Add more sensors here
-
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+      appBar: AppBar(
+        title: Text('Sensors'),
+      ),
+      body: InAppWebView(
+        initialUrlRequest: URLRequest(url: Uri.parse('https://dr1-console.things.ph/dashboard-public/5Rzz9QVVZ3UHhTsx3ioPhzoW')),
+        initialOptions: InAppWebViewGroupOptions(
+          crossPlatform: InAppWebViewOptions(
+            javaScriptEnabled: true,
+            useOnLoadResource: true,
           ),
         ),
+        onReceivedServerTrustAuthRequest: (controller, challenge) async {
+          // Bypass SSL certificate verification (not recommended for production)
+          return ServerTrustAuthResponse(action: ServerTrustAuthResponseAction.PROCEED);
+        },
+        onLoadResource: (controller, response) {
+          // This is a workaround to allow JavaScript to access the camera in the WebView.
+          // Replace 'http' with 'https' in the 'Content-Security-Policy' header.
+          final url = response.url?.toString();
+          if (url != null && url.startsWith('https://')) {
+            controller.evaluateJavascript(source: "document.head.querySelector('meta[name=\"viewport\"]').setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no');");
+            controller.evaluateJavascript(source: "document.head.querySelector('meta[http-equiv=\"Content-Security-Policy\"]').setAttribute('content', 'default-src *; img-src * data: https:; script-src * 'unsafe-inline' 'unsafe-eval' https:; style-src * 'unsafe-inline' https:;');");
+          }
+        },
       ),
     );
   }

@@ -10,20 +10,20 @@ class Weather extends StatefulWidget {
 }
 
 class _WeatherState extends State<Weather> {
-  final MqttService mqttService = MqttService(); // Instantiate the MQTT service
+  //final MqttService mqttService = MqttService(); // Instantiate the MQTT service
 
   @override
   void initState() {
     super.initState();
     // Replace 'your_mqtt_username' and 'your_mqtt_password' with actual MQTT credentials
-    mqttService.connect('64c14253811ec75105c1948a', 'QuRHxlbi8RDbkv7Nkq77N3Ps');
+    //mqttService.connect('64c14253811ec75105c1948a', 'QuRHxlbi8RDbkv7Nkq77N3Ps');
   }
 
-  @override
-  void dispose() {
-    mqttService.disconnect(); // Disconnect from the MQTT broker when the widget is disposed
-    super.dispose();
-  }
+  //@override
+  //void dispose() {
+    //mqttService.disconnect(); // Disconnect from the MQTT broker when the widget is disposed
+    //super.dispose();
+  //}
 
   @override
   Widget build(BuildContext context) {
