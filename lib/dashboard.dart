@@ -151,15 +151,6 @@ class _WeatherState extends State<Weather> {
                   ],
                 ),
               ),
-
-              // MQTT integration example:
-              ElevatedButton(
-                onPressed: () {
-                  // Publish a message to the MQTT broker when the button is pressed
-                  mqttService.publishMessage('Hello from Flutter!');
-                },
-                child: Text('Send MQTT Message'),
-              ),
             ],
           ),
         ),

@@ -1,80 +1,106 @@
+import 'dart:convert';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 class MqttService {
-  final String server = 'mqtt.things.ph';
-  final int port = 1883;
-  final String topic = 'RasPiTransPlantMQTT';
-  String clientId = '64cd098d6f6b73d7c2f40ad9'; // Replace 'your_client_id' with your actual client ID
+  final MqttServerClient _mqttClient = MqttServerClient('mqtt.things.ph', '64cd098d6f6b73d7c2f40ad9');
 
-  MqttServerClient client = MqttServerClient('mqtt.things.ph', '64cd098d6f6b73d7c2f40ad9');
+  // Sensor data
+  double temperature = 0;
+  double humidity = 0;
+  double pressure = 0;
+  int lightRelayStatus = 0;
+  int pumpRelayStatus = 0;
+  double moisture = 0;
+  double light = 0;
 
-  double temperature = 0.0;
-  double humidity = 0.0;
-  double pressure = 0.0;
-
+  // Connect to the MQTT broker
   Future<void> connect(String username, String password) async {
+    _mqttClient.logging(on: true);
+    _mqttClient.onDisconnected = _onDisconnected;
+    _mqttClient.onConnected = _onConnected;
+    _mqttClient.onSubscribed = _onSubscribed;
+    _mqttClient.onSubscribeFail = _onSubscribeFail;
+
+    final connMess = MqttConnectMessage()
+        .withClientIdentifier('64cd098d6f6b73d7c2f40ad9')
+        .authenticateAs('64c14253811ec75105c1948a', 'QuRHxlbi8RDbkv7Nkq77N3Ps')
+        .startClean() // Non-persistent session for testing
+        .withWillQos(MqttQos.atLeastOnce);
+    
+    _mqttClient.connectionMessage = connMess;
+
     try {
-      client.logging(on: true);
-
-      final MqttConnectMessage connectMessage = MqttConnectMessage()
-          .withClientIdentifier(clientId)
-          .authenticateAs('64c14253811ec75105c1948a', 'QuRHxlbi8RDbkv7Nkq77N3Ps') // Set the username and password here
-          .withWillTopic(topic)
-          .withWillMessage('Disconnected')
-          .startClean()
-          .withWillQos(MqttQos.atLeastOnce);
-      client.connectionMessage = connectMessage;
-
-      await client.connect();
-      print('Connected to MQTT broker');
-      subscribeToTopic();
+      await _mqttClient.connect();
     } catch (e) {
-      print('Connection failed: $e');
+      print('Exception: $e');
+      _mqttClient.disconnect();
+    }
+
+    if (_mqttClient.connectionStatus!.state == MqttConnectionState.connected) {
+      print('MQTT client connected');
+      _subscribeToTopic('RasPiTransPlantMQTT'); // Subscribe to the sensors topic
+    } else {
+      print('MQTT client connection failed - disconnecting');
+      _mqttClient.disconnect();
     }
   }
 
-  void subscribeToTopic() {
-    if (client.connectionStatus!.state == MqttConnectionState.connected) {
-      client.subscribe(topic, MqttQos.atLeastOnce);
-      client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> messages) {
-        final MqttPublishMessage message = messages[0].payload as MqttPublishMessage;
-        final String payload =
-            MqttPublishPayload.bytesToStringAsString(message.payload.message!);
-        print('Received message: $payload from topic: ${message.variableHeader!.topicName}');
-        updateSensorData(payload);
-      });
-    }
+  void _onDisconnected() {
+    print('MQTT client disconnected');
   }
 
-  void updateSensorData(String payload) {
-    // Assuming the payload is in the format "temperature,humidity,pressure"
-    List<String> sensorData = payload.split(',');
-    if (sensorData.length == 3) {
-      try {
-        temperature = double.parse(sensorData[0]);
-        humidity = double.parse(sensorData[1]);
-        pressure = double.parse(sensorData[2]);
-      } catch (e) {
-        print('Error parsing sensor data: $e');
+  void _onConnected() {
+    print('MQTT client connected');
+  }
+
+  void _onSubscribed(String topic) {
+    print('Subscribed to topic: $topic');
+  }
+
+  void _onSubscribeFail(String topic) {
+    print('Failed to subscribe to topic: $topic');
+  }
+
+  // Subscribe to the specified topic
+  void _subscribeToTopic(String topic) {
+    _mqttClient.subscribe(topic, MqttQos.atMostOnce);
+    _mqttClient.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
+      final MqttPublishMessage recMess = c[0].payload as MqttPublishMessage;
+      final String payload = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+
+      print('Received message from topic: $topic - Payload: $payload');
+
+      // Parse the JSON payload and update sensor data
+      final Map<String, dynamic> data = jsonDecode(payload);
+      if (data.containsKey('temperature')) {
+        temperature = data['temperature'];
       }
-    }
+      if (data.containsKey('humidity')) {
+        humidity = data['humidity'];
+      }
+      if (data.containsKey('pressure')) {
+        pressure = data['pressure'];
+      }
+      if (data.containsKey('lightRelayStatus')) {
+        lightRelayStatus = data['lightRelayStatus'];
+      }
+      if (data.containsKey('pumpRelayStatus')) {
+        pumpRelayStatus = data['pumpRelayStatus'];
+      }
+      if (data.containsKey('moisture')) {
+        moisture = data['moisture'];
+      }
+      if (data.containsKey('light')) {
+        light = data['light'];
+      }
+    });
   }
 
-  void publishMessage(String message) {
-    final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder();
-    builder.addString(message);
-
-    if (client.connectionStatus!.state == MqttConnectionState.connected) {
-      client.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!);
-      print('Published message: $message to topic: $topic');
-    }
-  }
-
+  // Disconnect from the MQTT broker
   void disconnect() {
-    if (client.connectionStatus!.state == MqttConnectionState.connected) {
-      client.disconnect();
-      print('Disconnected from MQTT broker');
+    if (_mqttClient.connectionStatus!.state == MqttConnectionState.connected) {
+      _mqttClient.disconnect();
     }
   }
 }
