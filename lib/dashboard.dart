@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'mqtt_service.dart'; // Import the MQTT service file
+import 'dart:async';
 
 class Weather extends StatefulWidget {
   Weather({Key? key}) : super(key: key);
@@ -10,20 +11,20 @@ class Weather extends StatefulWidget {
 }
 
 class _WeatherState extends State<Weather> {
-  //final MqttService mqttService = MqttService(); // Instantiate the MQTT service
+  final MqttService mqttService = MqttService(); // Instantiate the MQTT service
 
   @override
   void initState() {
     super.initState();
     // Replace 'your_mqtt_username' and 'your_mqtt_password' with actual MQTT credentials
-    //mqttService.connect('64c14253811ec75105c1948a', 'QuRHxlbi8RDbkv7Nkq77N3Ps');
+    mqttService.connect('64c14253811ec75105c1948a', 'QuRHxlbi8RDbkv7Nkq77N3Ps');
   }
 
-  //@override
-  //void dispose() {
-    //mqttService.disconnect(); // Disconnect from the MQTT broker when the widget is disposed
-    //super.dispose();
-  //}
+  @override
+  void dispose() {
+    mqttService.disconnect(); // Disconnect from the MQTT broker when the widget is disposed
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +151,32 @@ class _WeatherState extends State<Weather> {
                     ),
                   ],
                 ),
+              ),
+
+              // MQTT integration example:
+              ElevatedButton(
+                onPressed: () {
+                  // Publish a message to the MQTT broker when the button is pressed
+                  mqttService.publishMessage('light_on');
+                },
+                child: Text('Turn Light On'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  // Publish a message to the MQTT broker when the button is pressed
+                  mqttService.publishMessage('light_off');
+                },
+                child: Text('Turn Light Off'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  // Publish a message to the MQTT broker when the button is pressed
+                  mqttService.publishMessage('pump_on');
+                  Timer(Duration(seconds: 20), () {
+                    mqttService.publishMessage('pump_off');
+                  });
+                },
+                child: Text('Quick Water'),
               ),
             ],
           ),
