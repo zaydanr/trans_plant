@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage>{
 
   int _SelectedIndex = 0;
   static  List<Widget> _widgetOptions = <Widget>[
-    Weather(),
+    WeatherWidget(),
     Text(
       "Plant Info"
     ),
