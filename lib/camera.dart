@@ -6,10 +6,9 @@ class Camera extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Camera Stream'),
-      ),
+        title: Text('Camera Stream'), backgroundColor: Colors.transparent),
       body: InAppWebView(
-        initialUrlRequest: URLRequest(url: Uri.parse('http://192.168.1.15:5000')),
+        initialUrlRequest: URLRequest(url: Uri.parse('http://192.168.8.160:5000')),
         initialOptions: InAppWebViewGroupOptions(
           crossPlatform: InAppWebViewOptions(
             javaScriptEnabled: true,

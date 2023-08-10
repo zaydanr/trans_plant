@@ -17,9 +17,6 @@ class _HomePageState extends State<HomePage>{
   int _SelectedIndex = 0;
   static  List<Widget> _widgetOptions = <Widget>[
     WeatherWidget(),
-    Text(
-      "Plant Info"
-    ),
     SensorsPage(),
     Camera(),
   ];
@@ -42,10 +39,6 @@ class _HomePageState extends State<HomePage>{
               GButton(
                 icon: Icons.dashboard,
                 text: 'Dashboard',
-                ),
-              GButton(
-                icon: Icons.info,
-                text: 'Plant Info',
                 ),
               GButton(
                 icon: Icons.sensors,

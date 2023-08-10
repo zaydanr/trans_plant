@@ -6,8 +6,7 @@ class SensorsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sensors'),
-      ),
+        title: Text('Sensors'), backgroundColor: Colors.transparent),
       body: InAppWebView(
         initialUrlRequest: URLRequest(url: Uri.parse('https://dr1-console.things.ph/dashboard-public/5Rzz9QVVZ3UHhTsx3ioPhzoW')),
         initialOptions: InAppWebViewGroupOptions(

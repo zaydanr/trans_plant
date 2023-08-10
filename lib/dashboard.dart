@@ -31,7 +31,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
   }
   Future<void> fetchWeatherData() async {
     // Fetch weather data from API
-    String apiUrl = 'http://api.weatherapi.com/v1/current.json?key=4ccf6305a692493699f00248230308&q=Shady%20Grove,%20MD&aqi=no';
+    String apiUrl = 'http://api.weatherapi.com/v1/current.json?key=4ccf6305a692493699f00248230308&q=Rockville&aqi=no';
     var response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {

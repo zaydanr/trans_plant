@@ -68,6 +68,9 @@ flutter:
   assets:
     - assets/sunny.png
     - assets/humidity.png
+    - assets/happyface.png
+    - assets/deadface1.png
+    - assets/madface.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
