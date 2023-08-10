@@ -213,7 +213,8 @@ class _WeatherWidgetState extends State<WeatherWidget> {
     } else if (currentConditions.contains('Clear')) {
       return Icons.wb_sunny;
     } else {
-      return Icons.help_outline; // Default icon for unknown conditions
+      return Icons.cloud; // Default icon for unknown conditions
     }
+    
   }
 }
