@@ -18,17 +18,21 @@ class _WeatherWidgetState extends State<WeatherWidget> {
   String wind = ''; // Store API data for wind
   String precipitationAmount = ''; // Store API data for precipitation amount
 
+  int notificationInterval = 1; // Default notification interval in days
+
   @override
   void initState() {
     super.initState();
     mqttService.connect('64c14253811ec75105c1948a', 'QuRHxlbi8RDbkv7Nkq77N3Ps');
     fetchWeatherData();
   }
+
   @override
   void dispose() {
     mqttService.disconnect(); // Disconnect from the MQTT broker when the widget is disposed
     super.dispose();
   }
+
   Future<void> fetchWeatherData() async {
     // Fetch weather data from API
     String apiUrl = 'http://api.weatherapi.com/v1/current.json?key=4ccf6305a692493699f00248230308&q=Rockville&aqi=no';
@@ -100,7 +104,6 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                           currentConditionsIcon(),
                           'Current Conditions',
                           currentConditions,
-                          //textColor: currentConditionsColor,
                         ),
                         _buildWeatherDataRow(Icons.thermostat, 'Temperature', temperature),
                         _buildWeatherDataRow(Icons.opacity, 'Humidity', humidity),
@@ -118,7 +121,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                     ElevatedButton(
                       onPressed: () {
                         mqttService.publishMessage('light_on');
-                      },             
+                      },
                       style: ElevatedButton.styleFrom(
                         primary: Color.fromARGB(255, 89, 212, 109),
                         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -128,7 +131,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                      mqttService.publishMessage('light_off');
+                        mqttService.publishMessage('light_off');
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Color.fromARGB(255, 89, 212, 109),
@@ -150,6 +153,34 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                         textStyle: TextStyle(fontSize: 18),
                       ),
                       child: Text('Quick Water'),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        mqttService.publishMessage('auto_0');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Color.fromARGB(255, 89, 212, 109),
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        textStyle: TextStyle(fontSize: 18),
+                      ),
+                      child: Text('Manual'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        mqttService.publishMessage('auto_1');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Color.fromARGB(255, 89, 212, 109),
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        textStyle: TextStyle(fontSize: 18),
+                      ),
+                      child: Text('Autonomous'),
                     ),
                   ],
                 ),
@@ -215,6 +246,5 @@ class _WeatherWidgetState extends State<WeatherWidget> {
     } else {
       return Icons.cloud; // Default icon for unknown conditions
     }
-    
   }
 }
